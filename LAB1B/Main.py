@@ -1,7 +1,7 @@
 #Author: David Morales 
 #Course: CS 2302 Data Structures Fall 2019
 #Instructor: Diego Aguirre 
-#T.A: Gerardo
+#T.A: Gerardo Barraza
 #Assignment: Lab 1 - Option B (Password Cracking) 
 #Date: 09/06/2019 
 #Purpose: Password Cracker for Hashes
