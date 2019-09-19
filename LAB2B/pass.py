@@ -7,14 +7,14 @@
 #Purpose: Finds most common passwords from list. 
 
 import Node
-def common_pass(passLList): 
+def common_pass(passLList): #This is part 2 solution B. It is still WIP 
 	#TODO 1: add sorting method 
 	sorted_list = Node.LList() 
 	iter = passLList.head 
 	
 	#while (iter.next != None): 
 
-def parse_list(): 
+def parse_list(): #This is part 1 solution (A). It is implemented and done. 
 	print("Input textfile name: ") 
 	filename = input() 
 	passLList = Node.LList() 

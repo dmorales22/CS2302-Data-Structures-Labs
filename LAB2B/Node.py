@@ -17,6 +17,7 @@ class Node(object): #Basic constructor of the Node class provided to us.
 		self.count = count
 		self.next = next
 		
+#This is part 1 solution (A). It is implemented and done. 
 class LList(object): #The linked list node constructor that comes with Node Head and Int size variables. 
 	head = Node("", -1, None) 
 	size = 0 
