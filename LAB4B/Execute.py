@@ -1,10 +1,10 @@
-#Author: David Morales 
+#Author: David Morales
 #Course: CS 2302 Data Structures Fall 2019
-#Instructor: Diego Aguirre 
+#Instructor: Diego Aguirre
 #T.A: Gerardo Barraza
-#Assignment: Lab 4 - Option B 
-#Last Modification: 10/23/2019  
-#Purpose: Find anagrams in a text file using trees including BTrees.   
+#Assignment: Lab 4 - Option B
+#Last Modification: 10/28/2019
+#Purpose: Find anagrams in a text file using trees including AVL, Red-Black, and BTrees.
 
 import AVLTrees, RBTrees, BTrees
 
@@ -75,6 +75,31 @@ def find_anagrams(tree, word, prefix=""): #This method is very similar to the pr
 				
 	return count_anagrams
 	
+	
+def find_anagrams_btree(tree, word, prefix=""):
+	if len(word) <= 1: 
+		str = prefix + word
+		key = key_generator(str) 
+		
+		key_list = [str, key]
+		found_word = tree.search(key_list)
+		if (found_word != None): 
+			return 1 
+			
+		return 0 
+			
+	else:
+		count_anagrams = 0 
+		for i in range(len(word)):
+			cur = word[i: i + 1]
+			before = word[0: i] # letters before cur
+			after = word[i + 1:] # letters after cur
+			
+			if cur not in before: # Check if permutations of cur have not been generated.
+				count_anagrams += find_anagrams_btree(tree, before + after, prefix + cur)
+				
+	return count_anagrams
+
 def avl_tree(filename): #This method reads a text file, parses through it line by line, and inserts words into a AVL Tree. 
 	avl_tree = AVLTrees.AVLTree()
 	key_num = 0
@@ -109,8 +134,9 @@ def rb_tree(filename): #This method reads a text file, parses through it line by
 	
 def b_tree(filename): 
 	print("How many keys do you want for this BTree?") 
-	keys_input = int(input()) 
-	b_tree = BTrees.BTree(keys_input) 
+	keys_input = int(input())
+	b_tree = BTrees.BTree(keys_input)
+	key_word = ["", 0]
 	
 	with open(filename, encoding='windows-1252') as textFile: 
 		for line in textFile:
@@ -119,7 +145,8 @@ def b_tree(filename):
 			word_str = word[2:len(word) - 2] 
 			
 			key_num = key_generator(word_str) 
-			key_word = (word_str, key_num)
+			key_word = [word_str, key_num]
+			print(key_word)
 			
 			b_tree.insert(key_word)
 	return b_tree
@@ -129,6 +156,14 @@ def num_anagrams(tree):
 	print("Input a word: ") 
 	new_word = input() 
 	count = find_anagrams(tree, new_word) 
+	print("") 
+	print("Total number of anagrams found for this word:", count, "\n")  
+	
+def num_anagrams_btree(tree):
+	print("") 
+	print("Input a word: ") 
+	new_word = input() 
+	count = find_anagrams_btree(tree, new_word) 
 	print("") 
 	print("Total number of anagrams found for this word:", count, "\n")  
 
@@ -150,10 +185,10 @@ def max_anagrams(): #This method reads a text file in by user input, creates a R
 				string = line.split()
 				word = str(string)
 				word_str = word[2:len(word) - 2]
-				count = find_anagrams(tree, word_str)   
+				count = find_anagrams(tree, word_str)
 				
 				if (most_anagrams_num < count): #Sets variable with the word with the most anagrams using this if statement. 
-					most_anagrams = word_str 
+					most_anagrams = word_str
 					most_anagrams_num = count
 					
 		print("The word with the most anagrams is '", most_anagrams, "' with the total of", most_anagrams_num, "anagrams.")
@@ -171,7 +206,7 @@ def main(): #Main method asks for user input. User can choose to create an avl o
 	filename = input() 
 	
 	print("") 
-	print("Do you want to use an AVL tree or a Black-Red tree? Type 'A' for AVL or type 'B' for Red-Black.") 
+	print("Do you want to use an AVL, Black-Red, or BTree? Type 'A' for AVL, type 'B' for Red-Black. or type 'C' for BTree.") 
 	user_input = input()
 	
 	if (user_input == 'A' or user_input == 'a'):  
@@ -183,7 +218,8 @@ def main(): #Main method asks for user input. User can choose to create an avl o
 		num_anagrams(tree) 
 		
 	elif (user_input == 'C' or user_input == 'c'):
-		tree = b_tree(filename) 
+		tree = b_tree(filename)
+		num_anagrams_btree(tree)
 		
 	else: 
 		print("Invalid input, try again. \n") 
