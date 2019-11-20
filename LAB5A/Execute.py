@@ -1,6 +1,15 @@
-import LRU as lru
+#Author: David Morales
+#Course: CS 2302 Data Structures Fall 2019
+#Instructor: Diego Aguirre
+#T.A: Gerardo Barraza
+#Assignment: Lab 5
+#Last Modification: 11/19/2019
+#Purpose: Implement a LRU cache and find the most seen word in a list using heaps.
 
-def main(): 
+import LRU as lru
+import Heap as heap
+
+def lru_testing():
 	new_lru = lru.LRU(10)
 	new_lru.put(1, "Test")
 	new_lru.put(2, "Opp")
@@ -20,8 +29,29 @@ def main():
 	new_lru.put(6, "testssss")
 	new_lru.put(12, "1222")
 	empty = new_lru.get(12)
-	print(empty)
 	new_lru.print_inorder()
+	
 
+def main(): 
+	print("Do you want to use a LRU (press A), or find the most found word in a list using heaps (press B):")
+	choice = input()
+	
+	if (choice == "A" or choice == "a"):
+		lru_testing() 
+		
+	elif (choice == "B" or choice == "b"): 
+		print("\n")
+		print("Input filename:")
+		filename = input()
+		word_heap, dict = heap.MaxHeap.file_parser(filename)
+		size_of_heap = word_heap.size()
+		
+		print("How many words do you want to see printed? There are", size_of_heap, "words in the heap.")
+		k = int(input())
+		
+		word_heap.print_decending(k)
 
+	else: 
+		print("Invalid input try again.") 
+		
 main()
