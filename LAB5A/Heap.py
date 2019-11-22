@@ -37,7 +37,6 @@ class MaxHeap(object):
         return c_list[1]
 
     def insert(self, item):
-        #print(self.tree, item)
         self.tree.append(item)
         self._percolate_up(len(self.tree) - 1)
 
@@ -77,7 +76,11 @@ class MaxHeap(object):
         return char 
 
     def print_decending(self, num_of_times): #Prints descending order 
-        if (len(self.tree) < num_of_times): 
+        if (len(self.tree) <= 0):
+            print("There are no words in this heap! Try again.")
+            return 
+
+        if (len(self.tree) < num_of_times): #For empty list.
             print("Invalid number. Try again")
             return
 
@@ -108,13 +111,16 @@ class MaxHeap(object):
                 i_letter = self.caps_detector(i_word[i]) #Replaces uppercase letters with lowercase letters. 
                 parent_letter = self.caps_detector(parent_word[i])
 
-                if i_letter > parent_letter: 
+                if i_letter < parent_letter: #If the letter is lower order than parent, so it switches. 
                     i_val[0], parent_val[0] = parent_val[0], i_val[0]
                     i_val[1], parent_val[1] = parent_val[1], i_val[1]
                     self._percolate_up(parent_index)
 
-                elif i_letter < parent_letter:
+                elif i_letter > parent_letter:
                     return
+
+                elif i_letter == parent_letter:
+                    continue
 
         if parent_val[1] < i_val[1]:
             i_val[0], parent_val[0] = parent_val[0], i_val[0]
@@ -137,8 +143,85 @@ class MaxHeap(object):
 
     def _percolate_down(self, i): #Modified method to percolate down. 
         i_val = self.tree[i]
+        if i_val[1] == max(self.left_child(i), self.right_child(i)): #If the count of the children is equal to the node
+            r = 2 * i + 2
+            l = 2 * i + 1
 
-        if i_val[1] >= max(self.left_child(i), self.right_child(i)):
+            if self.left_child(i) == self.right_child(i): #If both children have the same count, then it compares each other.
+                right = self.tree[r]
+                left = self.tree[l]
+                parent = self.tree[i]
+
+                right_word = list(right[0])
+                left_word = list(left[0])
+                i_word = list(parent[0])
+
+                iter = min(len(right_word), len(left_word))
+                iter_i = min(iter, len(i_word))
+
+                for i in range(iter_i):
+                    r_letter = self.caps_detector(right_word[i]) #Replaces uppercase letters with lowercase letters. 
+                    l_letter = self.caps_detector(left_word[i])
+                    i_letter = self.caps_detector(i_word[i])
+
+                    if r_letter < l_letter: #Compares letters.
+                        if r_letter < i_letter:
+                            i_val[0], right[0] = right[0], i_val[0]
+                            i_val[1], right[1] = right[1], i_val[1]
+                            self._percolate_down(r)
+
+                    elif r_letter > l_letter:
+                        if l_letter < i_letter:
+                            i_val[0], left[0] = left[0], i_val[0]
+                            i_val[1], left[1] = left[1], i_val[1]
+                            self._percolate_down(l)
+
+                    elif r_letter == l_letter: 
+                        continue
+
+            elif i_val[1] == self.left_child(i): #If left child count is equal to the parent. Checks the word letter by letter. 
+                left = self.tree[l]
+                parent = self.tree[i]
+
+                left_word = list(left[0])
+                i_word = list(parent[0])
+
+                iter = min(len(left_word), len(i_word))
+
+                for i in range(iter):
+                    l_letter = self.caps_detector(left_word[i])
+                    i_letter = self.caps_detector(i_word[i])
+
+                    if i_letter > l_letter: 
+                        i_val[0], left[0] = left[0], i_val[0]
+                        i_val[1], left[1] = left[1], i_val[1]
+                        self._percolate_down(l)
+
+                    elif i_letter < l_letter: 
+                        return 
+
+            elif i_val[1] == self.right_child(i):  #If right child count is equal to the parent. Checks the word letter by letter. 
+                right = self.tree[r]
+                parent = self.tree[i]
+
+                right_word = list(right[0])
+                i_word = list(parent[0])
+
+                iter = min(len(right_word), len(i_word))
+
+                for i in range(iter):
+                    r_letter = self.caps_detector(right_word[i])
+                    i_letter = self.caps_detector(i_word[i])
+
+                    if i_letter > r_letter: 
+                        i_val[0], right[0] = right[0], i_val[0]
+                        i_val[1], right[1] = right[1], i_val[1]
+                        self._percolate_down(r)
+
+                    elif i_letter < r_letter: 
+                        return 
+
+        if i_val[1] > max(self.left_child(i), self.right_child(i)):
             return
 
         if self.left_child(i) > self.right_child(i):
@@ -148,7 +231,7 @@ class MaxHeap(object):
             max_child_index = 2 * i + 2
 
         max_list = self.tree[max_child_index]
-        i_val[0], max_list[0] = max_list[0], i_val[0]
+        i_val[0], max_list[0] = max_list[0], i_val[0] #Modified the statement to update the lists. 
         i_val[1], max_list[1] = max_list[1], i_val[1]
         self._percolate_down(max_child_index)
 
