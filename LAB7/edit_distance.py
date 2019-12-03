@@ -35,7 +35,7 @@ def edit_distance_dp(string1, string2): #Dynamic version of edit distance algori
             elif j == 0: #Populates side array with 1, 2, 3, 4...
                 sol_table[i][j] = i
 
-            elif string1[i - 1] == string2[j - 1]: #Compares last character of the two strings, passes down the value. 
+            elif string1[i - 1] == string2[j - 1]: #Compares last character of the two strings, passes down the value if equal. 
                 sol_table[i][j] = sol_table[i - 1][j - 1] 
 
             else: #Gets minimum operations of insertion, deletion, replacment and adds one.
